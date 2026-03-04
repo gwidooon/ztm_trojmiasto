@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import html
 from typing import Any
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
@@ -226,26 +227,51 @@ def _build_markdown_table(
 ) -> str:
     """Build a Markdown table for the HA markdown card."""
     if not departures:
-        return "Brak odjazdow."
+        return "<p>Brak odjazdow.</p>"
 
-    lines = [
-        "| Linia | Kierunek | Odjazd | Za ile | Status | Opoznienie |",
-        "| --- | --- | --- | --- | --- | --- |",
+    rows = [
+        (
+            _escape_markdown_cell(departure.route_short_name),
+            _escape_markdown_cell(departure.headsign or "-"),
+            _format_departure_time(departure.estimated_time),
+            departure.countdown_label(now),
+            "RT" if departure.status == "REALTIME" else "Rozklad",
+            _format_delay(departure.delay_seconds),
+        )
+        for departure in departures
     ]
 
-    for departure in departures:
-        lines.append(
-            "| {line} | {headsign} | {departure_at} | {countdown} | {status} | {delay} |".format(
-                line=_escape_markdown_cell(departure.route_short_name),
-                headsign=_escape_markdown_cell(departure.headsign or "-"),
-                departure_at=_format_departure_time(departure.estimated_time),
-                countdown=departure.countdown_label(now),
-                status="RT" if departure.status == "REALTIME" else "Rozklad",
-                delay=_format_delay(departure.delay_seconds),
-            )
+    table = [
+        "<table>",
+        "<thead>",
+        "<tr>",
+        "<th>Linia</th>",
+        "<th>Kierunek</th>",
+        "<th>Odjazd</th>",
+        "<th>Za ile</th>",
+        "<th>Status</th>",
+        "<th>Opoznienie</th>",
+        "</tr>",
+        "</thead>",
+        "<tbody>",
+    ]
+
+    for line, headsign, departure_at, countdown, status, delay in rows:
+        table.extend(
+            [
+                "<tr>",
+                f"<td>{line}</td>",
+                f"<td>{headsign}</td>",
+                f"<td>{html.escape(departure_at)}</td>",
+                f"<td>{html.escape(countdown)}</td>",
+                f"<td>{html.escape(status)}</td>",
+                f"<td>{html.escape(delay)}</td>",
+                "</tr>",
+            ]
         )
 
-    return "\n".join(lines)
+    table.extend(["</tbody>", "</table>"])
+    return "\n".join(table)
 
 
 def _format_departure_time(value: datetime) -> str:
@@ -276,7 +302,7 @@ def _format_delay(delay_seconds: int | None) -> str:
 
 def _escape_markdown_cell(value: str) -> str:
     """Escape markdown table cell content."""
-    return value.replace("|", "\\|").replace("\n", " ").strip()
+    return html.escape(value.replace("\n", " ").strip())
 
 
 def _icon_for_type(route_type: str | None) -> str:
