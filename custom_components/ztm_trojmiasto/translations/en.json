@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find stop",
+        "description": "Search by stop name, description or stop id.",
+        "data": {
+          "stop_search": "Stop name or id"
+        }
+      },
+      "select_stop": {
+        "title": "Select stop",
+        "description": "More than one stop matched your search.",
+        "data": {
+          "stop_id": "Stop"
+        }
+      },
+      "select_line": {
+        "title": "Select line",
+        "description": "Choose the line that should be tracked on the dashboard.",
+        "data": {
+          "line_id": "Line",
+          "max_departures": "Departures exposed in attributes",
+          "include_scheduled": "Include scheduled departures",
+          "refresh_interval": "Refresh interval in seconds"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not download ZTM data.",
+      "no_lines_found": "No lines found for the selected stop.",
+      "no_stops_found": "No stops matched your search."
+    },
+    "abort": {
+      "already_configured": "This stop and line are already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "description": "Tune refresh and output size.",
+        "data": {
+          "max_departures": "Departures exposed in attributes",
+          "include_scheduled": "Include scheduled departures",
+          "refresh_interval": "Refresh interval in seconds"
+        }
+      }
+    }
+  }
+}

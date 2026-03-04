@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Wyszukaj przystanek",
+        "description": "Szukaj po nazwie przystanku, opisie lub identyfikatorze stopu.",
+        "data": {
+          "stop_search": "Nazwa przystanku lub id"
+        }
+      },
+      "select_stop": {
+        "title": "Wybierz przystanek",
+        "description": "Znaleziono wiecej niz jeden pasujacy przystanek.",
+        "data": {
+          "stop_id": "Przystanek"
+        }
+      },
+      "select_line": {
+        "title": "Wybierz linie",
+        "description": "Wybierz linie, ktora ma byc sledzona na dashboardzie.",
+        "data": {
+          "line_id": "Linia",
+          "max_departures": "Liczba odjazdow w atrybutach",
+          "include_scheduled": "Pokazuj tez odjazdy rozkladowe",
+          "refresh_interval": "Interwal odswiezania w sekundach"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nie udalo sie pobrac danych ZTM.",
+      "no_lines_found": "Dla wybranego przystanku nie znaleziono linii.",
+      "no_stops_found": "Nie znaleziono pasujacych przystankow."
+    },
+    "abort": {
+      "already_configured": "Ten przystanek i linia sa juz skonfigurowane."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opcje",
+        "description": "Skonfiguruj odswiezanie i rozmiar wyniku.",
+        "data": {
+          "max_departures": "Liczba odjazdow w atrybutach",
+          "include_scheduled": "Pokazuj tez odjazdy rozkladowe",
+          "refresh_interval": "Interwal odswiezania w sekundach"
+        }
+      }
+    }
+  }
+}

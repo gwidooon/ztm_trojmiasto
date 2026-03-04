@@ -1,0 +1,17 @@
+{
+  "domain": "ztm_trojmiasto",
+  "name": "ZTM Trojmiasto Departures",
+  "codeowners": [
+    "@gwidooon"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/gwidooon/ztm_trojmiasto",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/gwidooon/ztm_trojmiasto/issues",
+  "loggers": [
+    "custom_components.ztm_trojmiasto"
+  ],
+  "requirements": [],
+  "version": "0.1.0"
+}

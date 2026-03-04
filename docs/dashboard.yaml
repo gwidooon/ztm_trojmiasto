@@ -1,0 +1,10 @@
+type: vertical-stack
+cards:
+  - type: tile
+    entity: sensor.gdansk_dworzec_glowny_line_n3_next_departure
+    name: N3 next departure
+    vertical: false
+  - type: entities
+    title: N3 departures
+    entities:
+      - entity: sensor.gdansk_dworzec_glowny_line_n3_departures_board
