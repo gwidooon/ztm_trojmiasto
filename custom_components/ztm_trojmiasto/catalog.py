@@ -30,7 +30,10 @@ def _normalize(value: str) -> str:
 def _natural_key(value: str) -> tuple[object, ...]:
     """Create a natural sort key for route names."""
     parts = re.findall(r"\d+|\D+", value or "")
-    return tuple(int(part) if part.isdigit() else part.casefold() for part in parts)
+    return tuple(
+        (0, int(part)) if part.isdigit() else (1, part.casefold())
+        for part in parts
+    )
 
 
 def _extract_collection(payload: dict, key: str) -> list[dict]:
