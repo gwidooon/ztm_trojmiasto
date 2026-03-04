@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
@@ -110,6 +111,10 @@ class ZtmTrojmiastoBaseSensor(
             ),
             "departure_count": len(self.coordinator.data.departures),
             ATTR_DEPARTURES: departures,
+            "markdown_table": _build_markdown_table(
+                self.coordinator.data.departures[:limit],
+                now,
+            ),
         }
 
         next_departure = self._next_departure()
@@ -213,6 +218,65 @@ def _serialize_departure(departure: DepartureInfo, now) -> dict[str, Any]:
         "vehicle_id": departure.vehicle_id,
         "vehicle_service": departure.vehicle_service,
     }
+
+
+def _build_markdown_table(
+    departures: tuple[DepartureInfo, ...] | list[DepartureInfo],
+    now: datetime,
+) -> str:
+    """Build a Markdown table for the HA markdown card."""
+    if not departures:
+        return "Brak odjazdow."
+
+    lines = [
+        "| Linia | Kierunek | Odjazd | Za ile | Status | Opoznienie |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+
+    for departure in departures:
+        lines.append(
+            "| {line} | {headsign} | {departure_at} | {countdown} | {status} | {delay} |".format(
+                line=_escape_markdown_cell(departure.route_short_name),
+                headsign=_escape_markdown_cell(departure.headsign or "-"),
+                departure_at=_format_departure_time(departure.estimated_time),
+                countdown=departure.countdown_label(now),
+                status="RT" if departure.status == "REALTIME" else "Rozklad",
+                delay=_format_delay(departure.delay_seconds),
+            )
+        )
+
+    return "\n".join(lines)
+
+
+def _format_departure_time(value: datetime) -> str:
+    """Format time in local timezone for dashboard display."""
+    return dt_util.as_local(value).strftime("%H:%M")
+
+
+def _format_delay(delay_seconds: int | None) -> str:
+    """Format delay column for the markdown table."""
+    if delay_seconds is None:
+        return "-"
+
+    if delay_seconds == 0:
+        return "0 min"
+
+    minutes = abs(delay_seconds) // 60
+    seconds = abs(delay_seconds) % 60
+    sign = "+" if delay_seconds > 0 else "-"
+
+    if minutes == 0:
+        return f"{sign}{seconds}s"
+
+    if seconds == 0:
+        return f"{sign}{minutes} min"
+
+    return f"{sign}{minutes} min {seconds}s"
+
+
+def _escape_markdown_cell(value: str) -> str:
+    """Escape markdown table cell content."""
+    return value.replace("|", "\\|").replace("\n", " ").strip()
 
 
 def _icon_for_type(route_type: str | None) -> str:

@@ -4,7 +4,7 @@ cards:
     entity: sensor.gdansk_dworzec_glowny_line_n3_next_departure
     name: N3 next departure
     vertical: false
-  - type: entities
+  - type: markdown
     title: N3 departures
-    entities:
-      - entity: sensor.gdansk_dworzec_glowny_line_n3_departures_board
+    content: |
+      {{ state_attr('sensor.gdansk_dworzec_glowny_line_n3_departures_board', 'markdown_table') }}

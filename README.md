@@ -47,6 +47,15 @@ Example Lovelace card snippet is available in [docs/dashboard.yaml](./docs/dashb
 
 The most useful entity for a tile widget is the `Next departure` sensor. The `Departures board` sensor is useful for an entities card or a markdown card.
 
+Example Markdown card:
+
+```yaml
+type: markdown
+title: Odjazdy
+content: |
+  {{ state_attr('sensor.twoja_encja_departures_board', 'markdown_table') }}
+```
+
 ## Project structure
 
 ```text
@@ -88,6 +97,7 @@ Main attributes:
 - `next_headsign`
 - `next_status`
 - `departures`
+- `markdown_table`
 
 ### Departures board
 
@@ -106,6 +116,8 @@ The `departures` attribute contains a list of structured objects with:
 - schedule time,
 - delay in seconds,
 - vehicle metadata when available.
+
+The `markdown_table` attribute contains a ready-to-render Markdown table for the Home Assistant Markdown card.
 
 ## Local development
 
